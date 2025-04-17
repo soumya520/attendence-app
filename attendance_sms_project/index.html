@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Attendance</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
+    button { padding: 10px 20px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Attendance for Today</h2>
+  <table id="attendanceTable">
+    <tr>
+      <th>Student Name</th>
+      <th>Phone Number</th>
+      <th>Status</th>
+    </tr>
+    <tr>
+      <td>Ravi Kumar</td>
+      <td>9876543210</td>
+      <td>
+        <select>
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Meena Sharma</td>
+      <td>9123456780</td>
+      <td>
+        <select>
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+  <button onclick="submitAttendance()">Submit</button>
+
+  <script>
+    function submitAttendance() {
+      const rows = document.querySelectorAll("#attendanceTable tr");
+      const data = [];
+
+      for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].children;
+        const name = cells[0].innerText;
+        const phone = cells[1].innerText;
+        const status = cells[2].children[0].value;
+
+        data.push({ name, phone, status });
+      }
+
+      const today = new Date().toISOString().split('T')[0];
+
+      data.forEach(record => {
+        fetch("YOUR_WEB_APP_URL", {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: today,
+            name: record.name,
+            status: record.status,
+            phone: record.phone
+          })
+        });
+      });
+
+      alert("Attendance Submitted!");
+    }
+  </script>
+</body>
+</html>
